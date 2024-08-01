@@ -35,23 +35,9 @@ interface TableComponentProps<T> {
 }
 
 export default function TableComponent<T>({ columns, items }: TableComponentProps<T>) {
-    const [isMobileDevice, setIsMobileDevice] = React.useState(window.innerWidth <= 600);
-
-    React.useEffect(() => {
-        const handleWindowReSize = () => {
-            setIsMobileDevice(window.innerWidth <= 600);
-        };
-
-        window.addEventListener("resize", handleWindowReSize);
-
-        return () => {
-            window.removeEventListener("resize", handleWindowReSize);
-        };
-    }, []);
-
-    if (isMobileDevice) {
-        return (
-            <Box>
+    return (
+        <>
+            <Box sx={{ display: { xs: "block", md: "none" } }}>
                 {items.map((item) => (
                     <Card
                         sx={{
@@ -69,31 +55,28 @@ export default function TableComponent<T>({ columns, items }: TableComponentProp
                     </Card>
                 ))}
             </Box>
-        );
-    }
-
-    return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label='customized table'>
-                <TableHead>
-                    <TableRow>
-                        {columns.map((column) => (
-                            <StyledTableCell>{column.label}</StyledTableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {items.map((item, index) => (
-                        <StyledTableRow key={index}>
+            <TableContainer component={Paper} sx={{ display: { xs: "none", md: "block" } }}>
+                <Table sx={{ minWidth: 700 }} aria-label='customized table'>
+                    <TableHead>
+                        <TableRow>
                             {columns.map((column) => (
-                                <StyledTableCell align='left'>
-                                    {column.content(item)}
-                                </StyledTableCell>
+                                <StyledTableCell>{column.label}</StyledTableCell>
                             ))}
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {items.map((item, index) => (
+                            <StyledTableRow key={index}>
+                                {columns.map((column) => (
+                                    <StyledTableCell align='left'>
+                                        {column.content(item)}
+                                    </StyledTableCell>
+                                ))}
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
     );
 }
