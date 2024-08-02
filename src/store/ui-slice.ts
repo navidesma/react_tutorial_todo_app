@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, Dispatch, UnknownAction } from "@reduxjs/toolkit";
 
 export interface UISliceType {
     token: string | null;
@@ -43,8 +43,20 @@ const uiSlice = createSlice({
         showNotification(state, action: { payload: NotificationType }) {
             state.notification = action.payload;
         },
+        clearNotification(state) {
+            state.notification = null;
+        },
     },
 });
+
+export const toggleNotification = (
+    dispatch: Dispatch<UnknownAction>,
+    notification: NotificationType,
+) => {
+    dispatch(uiActions.showNotification(notification));
+
+    setTimeout(() => dispatch(uiActions.clearNotification()), 3000);
+};
 
 export const uiActions = uiSlice.actions;
 export default uiSlice.reducer;

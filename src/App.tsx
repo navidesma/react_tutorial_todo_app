@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp/SignUp";
 import { UISliceType } from "./store/ui-slice";
 import { useSelector } from "react-redux";
 import SignIn from "./pages/SignIn/SignIn";
+import { Alert } from "@mui/material";
 
 const theme = createTheme({
     direction: "rtl",
@@ -23,10 +24,19 @@ const cacheRtl = createCache({
 });
 
 function App() {
-    const { isLoggedIn } = useSelector((store: { ui: UISliceType }) => store.ui);
+    const { isLoggedIn, notification } = useSelector((store: { ui: UISliceType }) => store.ui);
     return (
         <CacheProvider value={cacheRtl}>
             <ThemeProvider theme={theme}>
+                {notification && (
+                    <Alert
+                        severity={notification.type}
+                        variant='filled'
+                        sx={{ marginTop: "0.5rem", position: "fixed" }}
+                    >
+                        {notification.message}
+                    </Alert>
+                )}
                 <Routes>
                     {isLoggedIn && (
                         <>
