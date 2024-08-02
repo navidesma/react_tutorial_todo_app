@@ -10,6 +10,8 @@ import { UISliceType } from "./store/ui-slice";
 import { useSelector } from "react-redux";
 import SignIn from "./pages/SignIn/SignIn";
 import { Alert } from "@mui/material";
+import Logout from "./pages/Logout/Logout";
+import NewNote from "./pages/NewNote/NewNote";
 
 const theme = createTheme({
     direction: "rtl",
@@ -40,8 +42,11 @@ function App() {
                 <Routes>
                     {isLoggedIn && (
                         <>
-                            <Route path='/' element={<Home />} />
-                            <Route path='*' element={<Navigate to='/' />} />
+                            <Route path='/home' element={<Home />}>
+                                <Route path='/home/new-note' element={<NewNote />} />
+                            </Route>
+                            <Route path='/logout' element={<Logout />} />
+                            <Route path='*' element={<Navigate to='/home' />} />
                         </>
                     )}
                     {!isLoggedIn && (

@@ -19,11 +19,12 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AddIcon from "@mui/icons-material/Add";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
+import { Link } from "react-router-dom";
 
 const pages: { name: string; route: string; icon: React.ReactElement }[] = [
-    { name: "ایجاد یادداشت", route: "/", icon: <AddIcon /> },
-    { name: "پروفایل من", route: "/", icon: <AccountCircleIcon /> },
-    { name: "خروج", route: "/", icon: <ExitToAppIcon /> },
+    { name: "ایجاد یادداشت", route: "/home/new-note", icon: <AddIcon /> },
+    { name: "پروفایل من", route: "/profile", icon: <AccountCircleIcon /> },
+    { name: "خروج", route: "/logout", icon: <ExitToAppIcon /> },
 ];
 
 export default function Navbar() {
@@ -76,7 +77,13 @@ export default function Navbar() {
                             >
                                 <List>
                                     {pages.map((page) => (
-                                        <ListItem key={page.name} disablePadding>
+                                        <ListItem
+                                            key={page.name}
+                                            disablePadding
+                                            component={Link}
+                                            to={page.route}
+                                            sx={{ color: "black" }}
+                                        >
                                             <ListItemButton>
                                                 <ListItemIcon>{page.icon}</ListItemIcon>
                                                 <ListItemText primary={page.name} />
@@ -108,6 +115,8 @@ export default function Navbar() {
                             <Button
                                 key={page.name}
                                 sx={{ my: 2, color: "white", display: "block" }}
+                                component={Link}
+                                to={page.route}
                             >
                                 {page.name}
                             </Button>

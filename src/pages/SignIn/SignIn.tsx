@@ -79,9 +79,9 @@ export default function SignIn() {
                     </Grid>
                 </Grid>
                 <Box display={"flex"} justifyContent={"center"} marginBottom={3}>
-                    <Link to={"/sign-up"}>
-                        <Button>حساب کاربری ندارید؟ حساب جدید بسازید</Button>
-                    </Link>
+                    <Button component={Link} to='/sign-up'>
+                        حساب کاربری ندارید؟ حساب جدید بسازید
+                    </Button>
                 </Box>
             </Card>
         </Container>

@@ -2,6 +2,7 @@ import { Button, Card, Grid } from "@mui/material";
 import Main from "../../components/Main/Main";
 import TableComponent from "../../components/TableComponent/TableComponent";
 import { TodoType } from "../../interfaces";
+import { Outlet } from "react-router-dom";
 
 const items: TodoType[] = [
     { id: 1, title: "felan", is_done: true },
@@ -34,6 +35,7 @@ export default function Home() {
                     </Card>
                 </Grid>
             </Grid>
+            <Outlet />
         </Main>
     );
 }
