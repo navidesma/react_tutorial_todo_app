@@ -1,47 +1,37 @@
 import { Box, Button, Card, Container, Grid, TextField, Typography } from "@mui/material";
 import useInputValidator from "../../util/useInputValidator";
 import useSendRequest from "../../util/useSendRequest";
+import { useDispatch } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
 import { Link, useNavigate } from "react-router-dom";
 
 interface SubmitType {
     username: string;
-    lastName: string;
-    firstName: string;
     password: string;
 }
 
-export default function SignUp() {
+export default function SignIn() {
     const axiosInstance = useSendRequest();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const nameInputState = useInputValidator();
-    const lastNameInputState = useInputValidator();
     const userNameInputState = useInputValidator();
     const passwordInputState = useInputValidator();
     const formSubmitHandler: React.FormEventHandler = (event) => {
         event.preventDefault();
 
-        if (
-            !(
-                nameInputState.getIsValid() &&
-                lastNameInputState.getIsValid() &&
-                userNameInputState.getIsValid() &&
-                passwordInputState.getIsValid()
-            )
-        )
-            return;
+        if (!(userNameInputState.getIsValid() && passwordInputState.getIsValid())) return;
 
         const body: SubmitType = {
             username: userNameInputState.value,
-            firstName: nameInputState.value,
-            lastName: lastNameInputState.value,
             password: passwordInputState.value,
         };
 
         const send = async () => {
-            await axiosInstance.post("auth/register", body);
+            const response: { token: string } = await axiosInstance.post("auth/login", body);
 
-            navigate("/sign-in");
+            dispatch(uiActions.login({ token: response.token }));
+            navigate("/");
         };
 
         send();
@@ -50,7 +40,7 @@ export default function SignUp() {
         <Container maxWidth='md' sx={{ marginTop: "3rem" }}>
             <Card sx={{ borderRadius: "30px" }}>
                 <Typography textAlign={"center"} variant='h4' p={2} fontWeight={"bold"}>
-                    ثبت کاربر
+                    ورود
                 </Typography>
                 <Grid
                     component={"form"}
@@ -61,24 +51,6 @@ export default function SignUp() {
                     justifyContent={"center"}
                     p={3}
                 >
-                    <Grid item xs={12} lg={4}>
-                        <TextField
-                            label='نام'
-                            variant='outlined'
-                            fullWidth
-                            {...nameInputState.props}
-                        />
-                    </Grid>
-                    <Grid item xs={12}></Grid>
-                    <Grid item xs={12} lg={4}>
-                        <TextField
-                            label='نام خانوادگی'
-                            variant='outlined'
-                            fullWidth
-                            {...lastNameInputState.props}
-                        />
-                    </Grid>
-                    <Grid item xs={12}></Grid>
                     <Grid item xs={12} lg={4}>
                         <TextField
                             label='نام کاربری'
@@ -102,13 +74,13 @@ export default function SignUp() {
                     <Grid item xs={12}></Grid>
                     <Grid item xs={12} lg={4}>
                         <Button type='submit' variant='contained' color='success' fullWidth>
-                            ثبت کاربر جدید
+                            ورود
                         </Button>
                     </Grid>
                 </Grid>
                 <Box display={"flex"} justifyContent={"center"} marginBottom={3}>
-                    <Link to={"/sign-in"}>
-                        <Button>حساب کاربری دارید؟ وارد شوید</Button>
+                    <Link to={"/sign-up"}>
+                        <Button>حساب کاربری ندارید؟ حساب جدید بسازید</Button>
                     </Link>
                 </Box>
             </Card>

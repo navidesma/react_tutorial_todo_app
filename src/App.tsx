@@ -8,6 +8,7 @@ import Home from "./pages/Home/Home";
 import SignUp from "./pages/SignUp/SignUp";
 import { UISliceType } from "./store/ui-slice";
 import { useSelector } from "react-redux";
+import SignIn from "./pages/SignIn/SignIn";
 
 const theme = createTheme({
     direction: "rtl",
@@ -36,7 +37,8 @@ function App() {
                     {!isLoggedIn && (
                         <>
                             <Route path='/sign-up' element={<SignUp />} />
-                            <Route path='*' element={<Navigate to='/sign-up' />} />
+                            <Route path='/sign-in' element={<SignIn />} />
+                            <Route path='*' element={<Navigate to='/sign-in' />} />
                         </>
                     )}
                 </Routes>
