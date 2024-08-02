@@ -40,6 +40,9 @@ const uiSlice = createSlice({
             state.token = null;
             state.isLoggedIn = false;
         },
+        showNotification(state, action: { payload: NotificationType }) {
+            state.notification = action.payload;
+        },
     },
 });
 
