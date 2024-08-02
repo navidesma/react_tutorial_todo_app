@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { Grid, TextField } from "@mui/material";
 import useInputValidator from "../../util/useInputValidator";
 import useSendRequest from "../../util/useSendRequest";
+import { useDispatch } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -22,7 +24,8 @@ const Transition = React.forwardRef(function Transition(
 
 export default function NewNote() {
     const navigate = useNavigate();
-    const axiosInstance = useSendRequest();
+    const dispatch = useDispatch();
+    const axiosInstance = useSendRequest({ showNotification: true });
 
     const noteInputState = useInputValidator();
 
@@ -40,8 +43,8 @@ export default function NewNote() {
                 title: noteInputState.value,
             });
 
-            navigate("/home", { replace: true });
-            window.location.reload();
+            dispatch(uiActions.toggleReloadPage());
+            navigate("/home");
         };
 
         send();

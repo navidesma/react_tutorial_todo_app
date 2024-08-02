@@ -6,6 +6,7 @@ export interface UISliceType {
     firstName: string | null;
     lastName: string | null;
     notification: NotificationType | null;
+    reloadCounter: number;
 }
 
 export interface NotificationType {
@@ -19,6 +20,7 @@ const initialState: UISliceType = {
     firstName: localStorage.getItem("firstName"),
     lastName: localStorage.getItem("lastName"),
     notification: null,
+    reloadCounter: 0,
 };
 
 const uiSlice = createSlice({
@@ -34,6 +36,9 @@ const uiSlice = createSlice({
         setUserInfo(state, action: { payload: { firstName: string; lastName: string } }) {
             state.firstName = action.payload.firstName;
             state.lastName = action.payload.lastName;
+
+            localStorage.setItem("firstName", action.payload.firstName);
+            localStorage.setItem("lastName", action.payload.lastName);
         },
         logout(state) {
             localStorage.clear();
@@ -45,6 +50,9 @@ const uiSlice = createSlice({
         },
         clearNotification(state) {
             state.notification = null;
+        },
+        toggleReloadPage(state) {
+            state.reloadCounter += 1;
         },
     },
 });

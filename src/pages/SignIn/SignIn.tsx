@@ -28,9 +28,16 @@ export default function SignIn() {
         };
 
         const send = async () => {
-            const response: { token: string } = await axiosInstance.post("auth/login", body);
+            const response: { token: string; firstName: string; lastName: string } =
+                await axiosInstance.post("auth/login", body);
 
             dispatch(uiActions.login({ token: response.token }));
+            dispatch(
+                uiActions.setUserInfo({
+                    firstName: response.firstName,
+                    lastName: response.lastName,
+                }),
+            );
             navigate("/");
         };
 

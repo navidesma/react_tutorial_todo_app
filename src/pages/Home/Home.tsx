@@ -1,12 +1,15 @@
 import React from "react";
-import { Button, Card, Grid } from "@mui/material";
+import { Button, Card, Grid, Typography } from "@mui/material";
 import Main from "../../components/Main/Main";
 import TableComponent from "../../components/TableComponent/TableComponent";
 import { TodoType } from "../../interfaces";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import useSendRequest from "../../util/useSendRequest";
+import { UISliceType } from "../../store/ui-slice";
+import { useSelector } from "react-redux";
 
 export default function Home() {
+    const { reloadCounter } = useSelector((store: { ui: UISliceType }) => store.ui);
     const axiosInstance = useSendRequest();
     const [todos, setTodos] = React.useState<TodoType[]>();
 
@@ -18,7 +21,7 @@ export default function Home() {
         };
 
         send();
-    }, []);
+    }, [reloadCounter]);
 
     if (!todos) return <></>;
 
@@ -27,23 +30,36 @@ export default function Home() {
             <Grid container spacing={3} display={"flex"} justifyContent={"center"}>
                 <Grid item xs={12} lg={6}>
                     <Card sx={{ padding: "1rem" }}>
-                        <TableComponent
-                            items={todos}
-                            columns={[
-                                {
-                                    label: "متن یادداشت",
-                                    content: (item) => <>{item.title}</>,
-                                },
-                                {
-                                    label: "به اتمام رسیده",
-                                    content: (item) => <>{item.is_done ? "بله" : "خیر"}</>,
-                                },
-                                {
-                                    label: "",
-                                    content: () => <Button variant='contained'>ویرایش</Button>,
-                                },
-                            ]}
-                        />
+                        {todos.length > 0 ? (
+                            <TableComponent
+                                items={todos}
+                                columns={[
+                                    {
+                                        label: "متن یادداشت",
+                                        content: (item) => <>{item.title}</>,
+                                    },
+                                    {
+                                        label: "به اتمام رسیده",
+                                        content: (item) => <>{item.is_done ? "بله" : "خیر"}</>,
+                                    },
+                                    {
+                                        label: "",
+                                        content: () => <Button variant='contained'>ویرایش</Button>,
+                                    },
+                                ]}
+                            />
+                        ) : (
+                            <>
+                                <Typography variant='h4'>هیچ یادداشتی تعریف نشده</Typography>
+                                <Button
+                                    component={Link}
+                                    to='/home/new-note'
+                                    sx={{ marginTop: "1rem" }}
+                                >
+                                    ایجاد یادداشت جدید
+                                </Button>
+                            </>
+                        )}
                     </Card>
                 </Grid>
             </Grid>

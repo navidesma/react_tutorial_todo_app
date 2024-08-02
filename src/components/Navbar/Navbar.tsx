@@ -20,6 +20,8 @@ import AddIcon from "@mui/icons-material/Add";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { UISliceType } from "../../store/ui-slice";
 
 const pages: { name: string; route: string; icon: React.ReactElement }[] = [
     { name: "ایجاد یادداشت", route: "/home/new-note", icon: <AddIcon /> },
@@ -28,6 +30,7 @@ const pages: { name: string; route: string; icon: React.ReactElement }[] = [
 ];
 
 export default function Navbar() {
+    const { firstName, lastName } = useSelector((store: { ui: UISliceType }) => store.ui);
     const [open, setOpen] = React.useState(false);
 
     const toggleDrawer = (newOpen: boolean) => () => {
@@ -122,6 +125,7 @@ export default function Navbar() {
                             </Button>
                         ))}
                     </Box>
+                    <Typography>{firstName + " " + lastName}</Typography>
                 </Toolbar>
             </Container>
         </AppBar>

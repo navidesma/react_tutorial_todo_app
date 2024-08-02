@@ -11,7 +11,7 @@ interface SubmitType {
 }
 
 export default function SignUp() {
-    const axiosInstance = useSendRequest();
+    const axiosInstance = useSendRequest({ showNotification: true });
     const navigate = useNavigate();
 
     const nameInputState = useInputValidator();
