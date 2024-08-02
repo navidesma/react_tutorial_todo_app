@@ -3,11 +3,13 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Grid, TextField } from "@mui/material";
+import useInputValidator from "../../util/useInputValidator";
+import useSendRequest from "../../util/useSendRequest";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -20,9 +22,31 @@ const Transition = React.forwardRef(function Transition(
 
 export default function NewNote() {
     const navigate = useNavigate();
+    const axiosInstance = useSendRequest();
+
+    const noteInputState = useInputValidator();
+
     const handleClose = () => {
         navigate("/home");
     };
+
+    const formSubmitHandler: React.FormEventHandler = (event) => {
+        event.preventDefault();
+
+        if (!noteInputState.getIsValid()) return;
+
+        const send = async () => {
+            await axiosInstance.post("/api/todos", {
+                title: noteInputState.value,
+            });
+
+            navigate("/home", { replace: true });
+            window.location.reload();
+        };
+
+        send();
+    };
+
     return (
         <Dialog
             open={true}
@@ -31,16 +55,37 @@ export default function NewNote() {
             onClose={handleClose}
             aria-describedby='alert-dialog-slide-description'
         >
-            <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+            <DialogTitle>ایجاد یادداشت جدید</DialogTitle>
             <DialogContent>
-                <DialogContentText id='alert-dialog-slide-description'>
-                    Let Google help apps determine location. This means sending anonymous location
-                    data to Google, even when no apps are running.
-                </DialogContentText>
+                <Grid
+                    component='form'
+                    container
+                    spacing={3}
+                    display={"flex"}
+                    justifyContent={"center"}
+                    padding={5}
+                    onSubmit={formSubmitHandler}
+                >
+                    <Grid item xs={12}>
+                        <TextField
+                            label='متن یادداشت'
+                            multiline
+                            rows={4}
+                            fullWidth
+                            {...noteInputState.props}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button fullWidth variant='contained' color='success' type='submit'>
+                            ثبت
+                        </Button>
+                    </Grid>
+                </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Disagree</Button>
-                <Button>Agree</Button>
+                <Button onClick={handleClose} variant='outlined' color='error'>
+                    بستن
+                </Button>
             </DialogActions>
         </Dialog>
     );
