@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import SignIn from "./pages/SignIn/SignIn";
 import { Alert } from "@mui/material";
 import Logout from "./pages/Logout/Logout";
-import NewNote from "./pages/NewNote/NewNote";
+import CreateEditNote from "./pages/CreateEditNote/CreateEditNote";
 
 const theme = createTheme({
     direction: "rtl",
@@ -43,7 +43,11 @@ function App() {
                     {isLoggedIn && (
                         <>
                             <Route path='/home' element={<Home />}>
-                                <Route path='/home/new-note' element={<NewNote />} />
+                                <Route path='/home/new-note' element={<CreateEditNote />} />
+                                <Route
+                                    path='/home/edit-note/:noteId'
+                                    element={<CreateEditNote />}
+                                />
                             </Route>
                             <Route path='/logout' element={<Logout />} />
                             <Route path='*' element={<Navigate to='/home' />} />

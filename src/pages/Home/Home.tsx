@@ -44,7 +44,15 @@ export default function Home() {
                                     },
                                     {
                                         label: "",
-                                        content: () => <Button variant='contained'>ویرایش</Button>,
+                                        content: (item) => (
+                                            <Button
+                                                variant='contained'
+                                                component={Link}
+                                                to={`/home/edit-note/${item.id}`}
+                                            >
+                                                ویرایش
+                                            </Button>
+                                        ),
                                     },
                                 ]}
                             />

@@ -6,12 +6,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Grid, TextField } from "@mui/material";
 import useInputValidator from "../../util/useInputValidator";
 import useSendRequest from "../../util/useSendRequest";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../store/ui-slice";
+import { TodoType } from "../../interfaces";
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -22,12 +23,26 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction='up' ref={ref} {...props} />;
 });
 
-export default function NewNote() {
+export default function CreateEditNote() {
+    const { noteId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const axiosInstance = useSendRequest({ showNotification: true });
+    const axiosInstanceWithNotification = useSendRequest({ showNotification: true });
+    const axiosInstance = useSendRequest();
+    const [todo, setTodo] = React.useState<TodoType>();
 
     const noteInputState = useInputValidator();
+
+    React.useEffect(() => {
+        if (!noteId) return;
+
+        const send = async () => {
+            const response: TodoType = await axiosInstance.get(`api/todos/${noteId}`);
+            setTodo(response);
+            noteInputState.setValue(response.title);
+        };
+        send();
+    }, [noteId]);
 
     const handleClose = () => {
         navigate("/home");
@@ -38,10 +53,14 @@ export default function NewNote() {
 
         if (!noteInputState.getIsValid()) return;
 
+        const body = {
+            title: noteInputState.value,
+        };
+
         const send = async () => {
-            await axiosInstance.post("/api/todos", {
-                title: noteInputState.value,
-            });
+            if (todo) await axiosInstanceWithNotification.put(`api/todos/${todo.id}`, body);
+
+            await axiosInstanceWithNotification.post("api/todos", body);
 
             dispatch(uiActions.toggleReloadPage());
             navigate("/home");
@@ -58,7 +77,7 @@ export default function NewNote() {
             onClose={handleClose}
             aria-describedby='alert-dialog-slide-description'
         >
-            <DialogTitle>ایجاد یادداشت جدید</DialogTitle>
+            <DialogTitle>{todo ? "ویرایش یادداشت" : "ایجاد یادداشت جدید"}</DialogTitle>
             <DialogContent>
                 <Grid
                     component='form'
@@ -80,7 +99,7 @@ export default function NewNote() {
                     </Grid>
                     <Grid item xs={12}>
                         <Button fullWidth variant='contained' color='success' type='submit'>
-                            ثبت
+                            {todo ? "ویرایش" : "ثبت"}
                         </Button>
                     </Grid>
                 </Grid>
