@@ -12,6 +12,7 @@ import SignIn from "./pages/SignIn/SignIn";
 import { Alert } from "@mui/material";
 import Logout from "./pages/Logout/Logout";
 import CreateEditNote from "./pages/CreateEditNote/CreateEditNote";
+import Profile from "./pages/Profile/Profile";
 
 const theme = createTheme({
     direction: "rtl",
@@ -50,6 +51,7 @@ function App() {
                                 />
                             </Route>
                             <Route path='/logout' element={<Logout />} />
+                            <Route path='/profile' element={<Profile />} />
                             <Route path='*' element={<Navigate to='/home' />} />
                         </>
                     )}
