@@ -59,8 +59,7 @@ export default function CreateEditNote() {
 
         const send = async () => {
             if (todo) await axiosInstanceWithNotification.put(`api/todos/${todo.id}`, body);
-
-            await axiosInstanceWithNotification.post("api/todos", body);
+            else await axiosInstanceWithNotification.post("api/todos", body);
 
             dispatch(uiActions.toggleReloadPage());
             navigate("/home");
